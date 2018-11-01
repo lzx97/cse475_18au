@@ -46,7 +46,7 @@ void loop() {
   display.print("Active 1");
   display.setCursor(0, 0);
   display.display();
-  //theaterChaseRainbow(50);
+  theaterChaseRainbow(50);
 
   display.clearDisplay();
   display.setCursor(0, 0);
