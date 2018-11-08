@@ -5,12 +5,14 @@
 
 class Creature;
 
+#define MAX_NAME_LEN 12
+
 #define ACTIVE_STATES 3
 #define AMBIENT_STATES 3
 
 class State {
  public:
-  State(Creature& creature) : _creature(creature) {};
+  State(Creature& creature, char* const name);
   State(const State&) = delete;
 
   /**
@@ -39,7 +41,12 @@ class State {
   /**
    * @returns the id of this state from 0x00 to 0xFF.
    */
-  virtual uint8_t getStateId();
+  virtual uint8_t getId() = 0;
+
+  /**
+   * @returns name of this state, capped to 12 chars.
+   */
+  virtual char* getName();
 
   /**
    * @returns Array of relative weights for transitions into all other states based on this creature’s
@@ -63,6 +70,11 @@ class State {
    * Values over one make this state harder to startle, values under one make it easier.
    */
   virtual float getStartleFactor() = 0;
+
+  /**
+   * Called when PIR pin goes from LOW to HIGH.
+   */
+  virtual void PIR() = 0;
  protected:
   // Packet transmitters
   /**
@@ -93,14 +105,9 @@ class State {
    *
    * @param payload Should be the startle strength and id.
    */
-  virtual bool rxStartle(uint8_t len, uint8_t* payload) = 0;
+  virtual bool rxStartle(uint8_t len, uint8_t* payload);
 
   // Event handlers
-  /**
-   * Called when PIR pin goes from LOW to HIGH.
-   */
-  virtual void PIR() = 0;
-
   /**
    * Called when this creature is successfully startled. Should set the _creature's
    * _next state to the startle state.
@@ -126,6 +133,8 @@ class State {
   Creature& _creature;
 
   uint8_t _globalWeights[ACTIVE_STATES + AMBIENT_STATES] = { 0 };
+ private:
+  char _name[MAX_NAME_LEN + 1];
 };
 
 #endif  // _STATE_H_
