@@ -6,9 +6,8 @@
 
 class Startle : public State {
     public:
-        Startle(Creature& creature) : State(creature, "Startle") {}
+        Startle(Creature& creature) : State(creature, "Startle", 6) {}
         uint8_t getNumRepeats();
-        uint8_t getId();
 };
 
 #endif

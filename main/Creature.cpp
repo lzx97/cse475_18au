@@ -123,7 +123,8 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
 }
 
 void Creature::_updateDistance(uint8_t addr, int8_t rssi) {
-  // TODO: implement
+  distance = pow(10, (Globals.TX_POWER - rssi) / 20);
+  _creatureDistances[addr] = distance;
 }
 
 uint8_t Creature::updateThreshold() {
@@ -200,7 +201,21 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
   }
   uint8_t mode = payload[0];
   uint8_t stateId = payload[1];
+
   // TODO: implement
+  // 0x8X case
+  if (mode >> 7 == 1) {
+    setNextState()
+  }
+  else if (mode == 0 && stateId == 0) {
+    // random start
+  }
+  else if (mode == 0 && stateId != 0) {
+    // selected state
+  }
+  else {
+    return false;
+  }
   return true;
 }
 
