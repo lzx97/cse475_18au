@@ -239,7 +239,7 @@ bool Creature::_rxBroadcastStates(uint8_t len, uint8_t* payload) {
     _creatureStates[i] = payload[i];
   }
   return true;
-}
+} 
 
 bool Creature::tx(const uint8_t pid, const uint8_t dst_addr, const uint8_t len, uint8_t* const payload) {
   if (len + 3 > RH_RF69_MAX_MESSAGE_LEN) {
