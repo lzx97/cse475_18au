@@ -139,6 +139,8 @@ class Creature {
 
   // Called during main loop.
   void loop();
+
+  State* const createState(uint8_t pid);
  private:
   /**
    * Called during loop to poll radio for new received packets. Calls Creature::rx with any
