@@ -55,6 +55,7 @@ void State::txStartle(uint8_t strength, uint8_t id) {
 
 State* State::transition() {
   // TODO: implement
+  return Creature::createState(PID_BROADCAST_STATES);
 }
 
 void State::PIR() {

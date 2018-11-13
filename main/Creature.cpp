@@ -2,9 +2,17 @@
 #include "Debug.h"
 #include "State.h"
 #include "Wait.h"
+#include "Start.h"
+#include "Stop.h"
+#include "PlaySound.h"
+#include "PlayEffect.h"
+#include "Broadcast.h"
+#include "Startle.h"
+#include "SendState.h"
 #include "Midi.h"
 #include "Neopixel.h"
 
+#include <stdlib.h>
 #include <cmath>
 
 // TODO: put your kit number here
@@ -197,16 +205,18 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
   uint8_t mode = payload[0];
   uint8_t stateId = payload[1];
 
-  // TODO: implement
   // 0x8X case
   if (mode >> 7 == 1) {
-    setNextState()
+    _transition(createState(PID_PLAY_SOUND));
   }
   else if (mode == 0 && stateId == 0) {
     // random start
+    int randNum = rand() % 8;
+    _transition(createState(randNum));
   }
   else if (mode == 0 && stateId != 0) {
     // selected state
+    _transition(createState(stateId));
   }
   else {
     return false;
@@ -216,6 +226,13 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
 
 bool Creature::_rxBroadcastStates(uint8_t len, uint8_t* payload) {
   // TODO: implement
+  if (len != Globals.NUM_CREATURES + 1) {
+    return false;
+  }
+  
+  for (int i = 0; i < Globals.NUM_CREATURES + 1; i++) {
+    _creatureStates[i] = payload[i];
+  }
   return true;
 }
 
@@ -441,4 +458,31 @@ void Creature::setup() {
 Creature::~Creature() {
   delete[] _creatureDistances;
   delete[] _creatureStates;
+}
+
+State* const Creature::createState(uint8_t pid) {
+  if (pid > 7) {
+    return nullptr;
+  }
+
+  switch(pid) {
+    case PID_SET_GLOBALS:
+      return new Wait(*this);
+    case PID_STOP:
+      return new Stop(*this);
+    case PID_START:
+      return new Start(*this);
+    case PID_PLAY_SOUND:
+      return new PlaySound(*this);
+    case PID_PLAY_EFFECT:
+      return new PlayEffect(*this);
+    case PID_BROADCAST_STATES:
+      return new Broadcast(*this);
+    case PID_STARTLE:
+      return new Startle(*this); 
+    case PID_SEND_STATE:
+      return new SendState(*this);
+    default: 
+      return nullptr;
+    }
 }
