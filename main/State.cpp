@@ -33,24 +33,24 @@ bool State::rxPlayEffect(uint8_t len, uint8_t* payload) {
 }
 
 bool State::rxStartle(int8_t rssi, uint8_t len, uint8_t* payload) {
-  double x = (Globals.STARTLE_DECAY - rssi)/lobals.STARTLE_DECAY;
-  sigma = 1/(1 + exp(-x));
-  decay = sigma * getStartleFactor();
+  float x = (GLOBALS.STARTLE_DECAY - rssi)/GLOBALS.STARTLE_DECAY;
+  float sigma = 1/(1 + exp(-x));
+  float decay = sigma * getStartleFactor();
   
   uint8_t strength = payload[0];
   strength = strength * decay;
 
-  if (strength > Globals.STARTLE_THRESHOLD) {
+  if (strength > GLOBALS.STARTLE_THRESHOLD) {
     Serial.println(F("Startled"));
   }
   else {
     Serial.println(F("Not Startled"));
   }
+  return true;
 }
 
 void State::txStartle(uint8_t strength, uint8_t id) {
   Creature::tx(PID_STARTLE, BROADCAST_ADDR, 2, {strength, id});
-
 }
 
 State* State::transition() {

@@ -119,9 +119,11 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
       return true;
     case PID_BROADCAST_STATES:
       // TODO: Implement
+      _rxBroadcastStates(len, payload);
       return true;
     case PID_STARTLE:
       // TODO: Implement
+      _transition(createState(PID_STARTLE));
       return true;
     default:
       Serial.print(F("Received packet of unknown type: "));
@@ -131,7 +133,7 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
 }
 
 void Creature::_updateDistance(uint8_t addr, int8_t rssi) {
-  distance = pow(10, (Globals.TX_POWER - rssi) / 20);
+  int distance = pow(10, (GLOBALS.TX_POWER - rssi) / 20);
   _creatureDistances[addr] = distance;
 }
 
@@ -231,11 +233,11 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
 
 bool Creature::_rxBroadcastStates(uint8_t len, uint8_t* payload) {
   // TODO: implement
-  if (len != Globals.NUM_CREATURES + 1) {
+  if (len != GLOBALS.NUM_CREATURES + 1) {
     return false;
   }
   
-  for (int i = 0; i < Globals.NUM_CREATURES + 1; i++) {
+  for (int i = 0; i < GLOBALS.NUM_CREATURES + 1; i++) {
     _creatureStates[i] = payload[i];
   }
   return true;
@@ -479,18 +481,25 @@ State* const Creature::createState(uint8_t pid) {
       return new Wait(*this);
     case PID_STOP:
       return new Stop(*this);
+      //return new Wait(*this);
     case PID_START:
       return new Start(*this);
+      //return new Wait(*this);
     case PID_PLAY_SOUND:
       return new PlaySound(*this);
+      //return new Wait(*this);
     case PID_PLAY_EFFECT:
       return new PlayEffect(*this);
+      //return new Wait(*this);
     case PID_BROADCAST_STATES:
       return new Broadcast(*this);
+      //return new Wait(*this);
     case PID_STARTLE:
-      return new Startle(*this); 
+      return new Startle(*this);
+      //return new Wait(*this); 
     case PID_SEND_STATE:
       return new SendState(*this);
+      //return new Wait(*this);
     default: 
       return nullptr;
     }
