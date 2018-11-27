@@ -10,9 +10,11 @@ class Neopixel {
  public:
   /** List of all neopixel functions in this class. Each takes dt, the difference in time since the last call. */
   static void rainbow(uint32_t dt);
+  static void RunningLights(uint32_t dt);
+  static void Strobe(uint32_t dt);
 
   /** Array of all light effects, in a fixed order, used to assign an index to each. Add your effects to this! */
-  static constexpr void (*LIGHTS[2])(uint32_t) = {nullptr, &rainbow};
+  static constexpr void (*LIGHTS[2])(uint32_t) = {&Strobe, &RunningLights};
 
   /**
    * Use this to set the current light gesture.
@@ -39,6 +41,8 @@ class Neopixel {
   static uint32_t _lastLoop;
 
   static Adafruit_NeoPixel_ZeroDMA _strip;
+
+  static void setAll(uint8_t red, uint8_t green, uint8_t blue);
 };
 
 #endif  // _NEOPIXEL_H_

@@ -1,6 +1,7 @@
 #include "Active2.h"
 #include "Debug.h"
 #include "Midi.h"
+#include "Neopixel.h"
 
 constexpr uint8_t Active2::_localWeights[];
 
@@ -10,6 +11,7 @@ uint8_t Active2::getNumRepeats() {
 
 void Active2::loop(uint32_t dt) {
   Midi::setSound(2);
+  Neopixel::setLight(1);
 }
 
 const uint8_t* Active2::getLocalWeights() {

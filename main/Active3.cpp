@@ -1,6 +1,7 @@
 #include "Active3.h"
 #include "Debug.h"
 #include "Midi.h"
+#include "Neopixel.h"
 
 constexpr uint8_t Active3::_localWeights[];
 
@@ -10,6 +11,7 @@ uint8_t Active3::getNumRepeats() {
 
 void Active3::loop(uint32_t dt) {
   Midi::setSound(3);
+  Neopixel::setLight(1);
 }
 
 const uint8_t* Active3::getLocalWeights() {

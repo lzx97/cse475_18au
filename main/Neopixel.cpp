@@ -23,7 +23,8 @@ void Neopixel::loop() {
     dt = 0;
   }
   _lastLoop = thisLoop;
-
+  Serial.print("Current dt: ");
+  Serial.println(dt);
   if (LIGHTS[_currentIdx] != nullptr) {
     LIGHTS[_currentIdx](dt);
   }
@@ -64,3 +65,54 @@ void Neopixel::rainbow(uint32_t dt) {
     offset++;
   }
 }
+
+
+void Neopixel::RunningLights(uint32_t dt) {
+  static uint8_t offset = 0;
+
+  uint8_t red = 0xff;
+  uint8_t green = 0xff;
+  uint8_t blue = 0x00;
+
+  for (int j = 0; j < _strip.numPixels() * 2; j++)
+  {
+    offset++;
+    for (int i = 0; i < _strip.numPixels(); i++) {
+      _strip.setPixelColor(i, ((sin(i + offset) * 127 + 128) / 255)*red,
+                          ((sin(i + offset) * 127 + 128) / 255)*green,
+                          ((sin(i + offset) * 127 + 128) / 255)*blue);
+    }
+
+    _strip.show();
+    delay(150);
+  }
+    
+}
+
+
+void Neopixel::Strobe(uint32_t dt) {
+
+  uint8_t red = 0x00;
+  uint8_t green = 0xff;
+  uint8_t blue = 0xff;
+
+  uint8_t strobeCount = 10;
+  for (int j = 0; j < strobeCount; j++) {
+    setAll(red, green, blue);
+    _strip.show();
+    delay(50);
+    setAll(0, 0, 0);
+    _strip.show();
+    delay(50);
+  }
+
+  delay(500);
+}
+
+void Neopixel::setAll(uint8_t red, uint8_t green, uint8_t blue) {
+  for (int i = 0; i < _strip.numPixels(); i++ ) {
+    _strip.setPixelColor(i, _strip.Color(red, green, blue));
+  }
+  _strip.show();
+}
+
