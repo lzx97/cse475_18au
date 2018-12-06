@@ -16,7 +16,7 @@
 #include <cmath>
 
 // TODO: put your kit number here
-#define KIT_NUM 0
+#define KIT_NUM 2
 
 #define VERSION "2.3"
 
@@ -28,7 +28,7 @@ inline float getBatteryVoltage() {
 
 Creature::Creature() {
   // Initialize _next to be the Wait state, so we will immediately transition into it on the first loop.
-  _next = getState(0);
+  _next = getState(1);
   _prev = _state = nullptr;
 
   pinMode(ID_PIN, INPUT_PULLUP);
@@ -496,36 +496,36 @@ Creature::~Creature() {
   delete[] _creatureStates;
 }
 
-State* const Creature::createState(uint8_t pid) {
-  if (pid > 7) {
-    return nullptr;
-  }
+// State* const Creature::createState(uint8_t pid) {
+//   if (pid > 7) {
+//     return nullptr;
+//   }
 
-  switch(pid) {
-    case PID_SET_GLOBALS:
-      return new Wait(*this);
-    case PID_STOP:
-      return new Stop(*this);
-      //return new Wait(*this);
-    case PID_START:
-      return new Start(*this);
-      //return new Wait(*this);
-    case PID_PLAY_SOUND:
-      return new PlaySound(*this);
-      //return new Wait(*this);
-    case PID_PLAY_EFFECT:
-      return new PlayEffect(*this);
-      //return new Wait(*this);
-    case PID_BROADCAST_STATES:
-      return new Broadcast(*this);
-      //return new Wait(*this);
-    case PID_STARTLE:
-      return new Startle(*this);
-      //return new Wait(*this); 
-    case PID_SEND_STATE:
-      return new SendState(*this);
-      //return new Wait(*this);
-    default: 
-      return nullptr;
-    }
-}
+//   switch(pid) {
+//     case PID_SET_GLOBALS:
+//       return new Wait(*this);
+//     case PID_STOP:
+//       return new Stop(*this);
+//       //return new Wait(*this);
+//     case PID_START:
+//       return new Start(*this);
+//       //return new Wait(*this);
+//     case PID_PLAY_SOUND:
+//       return new PlaySound(*this);
+//       //return new Wait(*this);
+//     case PID_PLAY_EFFECT:
+//       return new PlayEffect(*this);
+//       //return new Wait(*this);
+//     case PID_BROADCAST_STATES:
+//       return new Broadcast(*this);
+//       //return new Wait(*this);
+//     case PID_STARTLE:
+//       return new Startle(*this);
+//       //return new Wait(*this); 
+//     case PID_SEND_STATE:
+//       return new SendState(*this);
+//       //return new Wait(*this);
+//     default: 
+//       return nullptr;
+//     }
+// }

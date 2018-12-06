@@ -1,4 +1,6 @@
 #include "Startle.h"
+#include "Midi.h"
+#include "Neopixel.h"
 
 constexpr uint8_t Startle::_localWeights[];
 
@@ -7,6 +9,8 @@ uint8_t Startle::getNumRepeats() {
 }
 
 void Startle::loop(uint32_t dt) {
+  Midi::setSound(25);
+  Neopixel::setLight(3);
 }
 
 const uint8_t* Startle::getLocalWeights() {
